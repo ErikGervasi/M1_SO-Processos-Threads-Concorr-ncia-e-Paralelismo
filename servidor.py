@@ -17,8 +17,7 @@ def handle_numeros(pipe_name):
             pipe_name, 
             win32pipe.PIPE_ACCESS_OUTBOUND,
             win32pipe.PIPE_TYPE_MESSAGE | win32pipe.PIPE_WAIT, 
-            10, 65536, 65536, 0, None)
-        print(f"Esperando cliente (Números) no pipe {pipe_name}...")
+            4, 65536, 65536, 0, None)
         win32pipe.ConnectNamedPipe(pipe, None)  # Espera cliente conectar
         while True:
             time.sleep(random.randint(1, 3))
@@ -39,8 +38,8 @@ def handle_strings(pipe_name):
             pipe_name, 
             win32pipe.PIPE_ACCESS_OUTBOUND,
             win32pipe.PIPE_TYPE_MESSAGE | win32pipe.PIPE_WAIT, 
-            10, 65536, 65536, 0, None)  
-        print(f"Esperando cliente (Strings) no pipe {pipe_name}...")
+            4, 65536, 65536, 0, None)  
+
         win32pipe.ConnectNamedPipe(pipe, None)  # Espera cliente conectar
         while True:
             time.sleep(random.randint(1, 3))  
@@ -58,7 +57,8 @@ def servidor():
     print("Servidor rodando e esperando por conexões...")
 
     # Cria um pool de threads com base no número de clientes que o sistema deve suportar
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    with ThreadPoolExecutor(max_workers=8) as executor:
+
         # O loop cria instâncias de pipes continuamente, permitindo múltiplos clientes
         while True:
             executor.submit(handle_numeros, r'\\.\pipe\numeros_pipe')  # Cria um pipe para números
